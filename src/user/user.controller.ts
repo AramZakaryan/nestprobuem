@@ -23,10 +23,15 @@ export class UserController {
     return this.userService.create(createUserDto)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id)
+  @Get()
+  findOne(@Body() createUserDto: CreateUserDto) {
+    return this.userService.findOne(createUserDto.email)
   }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.userService.findOne(+id)
+  // }
 
   // @Get()
   // findAll() {

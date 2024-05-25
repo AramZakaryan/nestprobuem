@@ -7,10 +7,6 @@ import { AuthModule } from './auth/auth.module'
 import { TransactionModule } from './transaction/transaction.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { User } from './user/entities/user.entity'
-import { Auth } from './auth/entities/auth.entity'
-import { Category } from './category/entities/category.entity'
-import { Transaction } from './transaction/entities/transaction.entity'
 
 @Module({
   imports: [
@@ -21,7 +17,7 @@ import { Transaction } from './transaction/entities/transaction.entity'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
+        type: 'postgres',
         host: configService.get('DB_HOST'),
         port: +configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),

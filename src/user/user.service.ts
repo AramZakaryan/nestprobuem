@@ -22,9 +22,13 @@ export class UserService {
     return { user }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`
+  async findOne(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOneBy({ email })
   }
+
+  // findOne(id: number) {
+  //   return `This action returns a #${id} user`
+  // }
 
   // async findAll() {
   //   return await this.userRepository.find({}).catch((err) => new BadRequestException(err))

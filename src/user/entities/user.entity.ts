@@ -1,3 +1,5 @@
+import { Category } from '../../category/entities/category.entity'
+import { Transaction } from '../../transaction/entities/transaction.entity'
 import {
   Column,
   CreateDateColumn,
@@ -6,8 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Category } from '../../category/entities/category.entity'
-import { Transaction } from '../../transaction/entities/transaction.entity'
 
 @Entity()
 export class User {
