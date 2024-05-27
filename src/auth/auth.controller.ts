@@ -1,8 +1,8 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
+  Req,
   Request,
   UseGuards,
   UsePipes,
@@ -11,8 +11,7 @@ import {
 import { LocalAuthGuard } from './guards/local-auth.guard'
 import { AuthService } from './auth.service'
 import { JwtAuthGuard } from './guards/jwt-auth.guard'
-import { CreateAuthDto } from './dto/create-auth.dto'
-import { IUser } from '../types/types'
+import { CustomRequest } from '../types/types'
 
 @Controller('auth')
 export class AuthController {
@@ -21,13 +20,13 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: any) {
+  async login(@Request() req: CustomRequest) {
     return await this.authService.login(req.user)
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(['me', 'profile'])
-  async(@Request() req: any) {
+  async(@Req() req: CustomRequest) {
     return req.user
   }
 }

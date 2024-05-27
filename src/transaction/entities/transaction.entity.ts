@@ -15,13 +15,13 @@ export class Transaction {
   @PrimaryGeneratedColumn({ name: 'transaction_id' })
   id: number
   @Column({ nullable: true })
-  type: string // income / expense / null
+  type: 'income' | 'expense' // income / expense / null
   @Column()
   title: string
   @Column()
   amount: number
   @Column()
-  user_id: string
+  user_id: number
   @ManyToOne(() => User, (user) => user.transactions)
   @JoinColumn({ name: 'user_id' })
   user: User
