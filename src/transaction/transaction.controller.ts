@@ -37,15 +37,21 @@ export class TransactionController {
     @Req() req: CustomRequest,
     @Query('type') type: 'income' | 'expense',
     @Query('title') title: string,
+    @Query('amount') amount: number,
     @Query('category_id') category_id: number,
   ) {
-    return await this.transactionService.findAll(req.user.id, type, title, category_id)
+    return await this.transactionService.findAll(req.user.id, type, title, amount, category_id)
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('sum')
-  async findSum(@Req() req: CustomRequest, @Body() updateTransactionDto: UpdateTransactionDto) {
-    return await this.transactionService.findSum(req.user.id, updateTransactionDto)
+  async findSum(
+    @Req() req: CustomRequest,
+    @Query('type') type: 'income' | 'expense',
+    @Query('title') title: string,
+    @Query('category_id') category_id: number,
+  ) {
+    return await this.transactionService.findSum(req.user.id, type, title, category_id)
   }
 
   @UseGuards(JwtAuthGuard, TransactionAccessGuard)

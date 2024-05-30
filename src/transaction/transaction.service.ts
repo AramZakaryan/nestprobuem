@@ -39,6 +39,7 @@ export class TransactionService {
     userId: IUser['id'],
     type?: 'income' | 'expense',
     title?: string,
+    amount?: number,
     category_id?: number,
   ) {
     return await this.transactionRepository.find({
@@ -46,6 +47,7 @@ export class TransactionService {
         user_id: userId,
         type,
         title,
+        amount,
         category_id,
       },
       relations: { category: true },
@@ -53,11 +55,18 @@ export class TransactionService {
     })
   }
 
-  async findSum(userId: IUser['id'], body: UpdateTransactionDto) {
+  async findSum(
+    userId: IUser['id'],
+    type?: 'income' | 'expense',
+    title?: string,
+    category_id?: number,
+  ) {
     const transactions = await this.transactionRepository.find({
       where: {
         user_id: userId,
-        type: body.type,
+        type,
+        title,
+        category_id,
       },
     })
     return transactions.reduce((acc, t) => acc + t.amount, 0)
