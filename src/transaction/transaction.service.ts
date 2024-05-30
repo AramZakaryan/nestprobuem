@@ -17,19 +17,6 @@ export class TransactionService {
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto, userId: IUser['id']) {
-    // // checking if transaction exists
-    // const isExist = await this.transactionRepository.findOneBy({
-    //   type: createTransactionDto.type,
-    //   title: createTransactionDto.title,
-    //   category: { id: createTransactionDto.category_id },
-    //   user: { id: userId },
-    // })
-    // if (isExist) throw new BadRequestException('the transaction already exists')
-
-    // // checking if category exists or if authorised user has access to category
-    // const category = await this.categoryService.findOne(createTransactionDto.category_id, userId)
-    // if (!category) throw new BadRequestException('the category not found')
-
     const payload = {
       type: createTransactionDto.type,
       title: createTransactionDto.title,
@@ -48,18 +35,38 @@ export class TransactionService {
     return { transaction }
   }
 
-  async findAll(userId: IUser['id']) {
+  async findAll(
+    userId: IUser['id'],
+    type?: 'income' | 'expense',
+    title?: string,
+    category_id?: number,
+  ) {
     return await this.transactionRepository.find({
-      where: { user_id: userId },
+      where: {
+        user_id: userId,
+        type,
+        title,
+        category_id,
+      },
       relations: { category: true },
       order: { updated_at: 'DESC' },
     })
   }
 
+  async findSum(userId: IUser['id'], body: UpdateTransactionDto) {
+    const transactions = await this.transactionRepository.find({
+      where: {
+        user_id: userId,
+        type: body.type,
+      },
+    })
+    return transactions.reduce((acc, t) => acc + t.amount, 0)
+  }
+
   async findAllWithPagination(page: number, limit: number, userId: IUser['id']) {
-    // // checking if page and limit are defined
-    // if (!page) throw new BadRequestException('page query parameter is undefined')
-    // if (!limit) throw new BadRequestException('limit query parameter is undefined')
+    // checking if page and limit are defined
+    if (!page) throw new BadRequestException('page query parameter is undefined')
+    if (!limit) throw new BadRequestException('limit query parameter is undefined')
 
     return await this.transactionRepository.find({
       where: { user_id: userId },
@@ -70,35 +77,18 @@ export class TransactionService {
     })
   }
 
-  async findOne(id: number, userId: IUser['id']) {
-    // checking if authorised user has access to transaction
+  async findOne(id: number) {
     const transaction = await this.transactionRepository.findOne({
-      where: {
-        user_id: userId,
-        id,
-      },
-      relations: {
-        category: true,
-      },
+      where: { id },
+      relations: { category: true },
     })
-    if (!transaction) throw new BadRequestException('the transaction not found')
-
-    return { transaction }
+    if (!transaction)
+      throw new BadRequestException('the transaction not found: CustomErrorCode: TS-FO-01')
+    return transaction
   }
 
   async update(id: number, updateTransactionDto: UpdateTransactionDto, userId: IUser['id']) {
-    // // checking if transaction exist or if authorised user has access to transaction
-    // const transaction = await this.transactionRepository.findOneBy({
-    //   user_id: userId,
-    //   id,
-    // })
-    // if (!transaction) throw new BadRequestException('the transaction not found')
-
-    // // checking if category exists or if authorised user has access to category
-    // const category = await this.categoryService.findOne(updateTransactionDto.category_id, userId)
-    // if (!category) throw new BadRequestException('the category not found')
-
-    const result = await this.transactionRepository.update(
+    return await this.transactionRepository.update(
       {
         user_id: userId,
         id,
@@ -110,22 +100,9 @@ export class TransactionService {
         category_id: updateTransactionDto.category_id,
       },
     )
-
-    return { result }
   }
 
   async remove(id: number, userId: IUser['id']) {
-    // // checking if transaction exists or if authorised user has access to transaction
-    // const transaction = await this.transactionRepository.findOneBy({
-    //   user_id: userId,
-    //   id,
-    // })
-    // if (!transaction) throw new BadRequestException('the transaction not found')
-
-    const result = await this.transactionRepository.delete({
-      id,
-    })
-
-    return { result }
+    return await this.transactionRepository.delete({ id })
   }
 }

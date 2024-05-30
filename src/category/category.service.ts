@@ -40,7 +40,7 @@ export class CategoryService {
       new BadRequestException('something went wrong: category not created')
     }
 
-    return { category }
+    return category
   }
 
   async findAll(userId: IUser['id']) {
@@ -57,7 +57,7 @@ export class CategoryService {
     })
     if (!category)
       throw new BadRequestException('the category not found: CustomErrorCode: CS-FO-01')
-    return { category }
+    return category
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
