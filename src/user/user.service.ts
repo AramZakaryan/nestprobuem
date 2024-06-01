@@ -31,28 +31,12 @@ export class UserService {
 
     // jwt token creating
     const payload = { email: user.email, id: user.id }
-    const access_token = this.jwtService.sign(payload)
+    const token = this.jwtService.sign(payload)
 
-    return { user, access_token }
+    return { ...user, token }
   }
 
-  async findOne(email: string): Promise<User | undefined> {
+  async findOne(email: string) {
     return await this.userRepository.findOneBy({ email })
   }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`
-  // }
-
-  // async findAll() {
-  //   return await this.userRepository.find({}).catch((err) => new BadRequestException(err))
-  // }
-
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`
-  // }
 }

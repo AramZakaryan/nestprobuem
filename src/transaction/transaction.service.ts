@@ -32,7 +32,7 @@ export class TransactionService {
       new BadRequestException('something went wrong: transaction not created')
     }
 
-    return { transaction }
+    return transaction
   }
 
   async findAll(

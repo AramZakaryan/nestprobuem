@@ -17,7 +17,7 @@ import { CustomRequest } from '../types/types'
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UsePipes(new ValidationPipe())
+  // @UsePipes(new ValidationPipe())
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: CustomRequest) {
@@ -25,7 +25,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(['me', 'profile'])
+  @Get(['getMe', 'me', 'profile'])
   async profile(@Req() req: CustomRequest) {
     return req.user
   }

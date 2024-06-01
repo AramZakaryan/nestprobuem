@@ -54,12 +54,6 @@ export class TransactionController {
     return await this.transactionService.findSum(req.user.id, type, title, category_id)
   }
 
-  @UseGuards(JwtAuthGuard, TransactionAccessGuard)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.transactionService.findOne(+id)
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('pagination')
   async findAllWithPagination(
@@ -67,7 +61,13 @@ export class TransactionController {
     @Query('limit') limit: number,
     @Req() req: CustomRequest,
   ) {
-    return await this.transactionService.findAllWithPagination(page, limit, req.user.id)
+    return await this.transactionService.findAllWithPagination(+page, +limit, +req.user.id)
+  }
+
+  @UseGuards(JwtAuthGuard, TransactionAccessGuard)
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return await this.transactionService.findOne(+id)
   }
 
   @UseGuards(JwtAuthGuard, TransactionAccessGuard, CategoryAccessGuard)

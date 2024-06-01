@@ -1,17 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ValidationPipe,
-  UsePipes,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 
 @Controller('user')
 export class UserController {
@@ -19,13 +8,17 @@ export class UserController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto)
+  async create(@Body() createUserDto: CreateUserDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restUser } = await this.userService.create(createUserDto)
+    return restUser
   }
 
   @Get()
-  findOne(@Body() createUserDto: CreateUserDto) {
-    return this.userService.findOne(createUserDto.email)
+  async findOne(@Param('email') email: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restUser } = await this.userService.findOne(email)
+    return restUser
   }
 
   // @Get(':id')
